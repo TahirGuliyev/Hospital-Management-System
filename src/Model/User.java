@@ -1,6 +1,9 @@
 package Model;
 
+import Util.DBConnection;
+
 public class User {
+	DBConnection conn = new DBConnection();
 private int id;
 private String finKod;
 private String password;
