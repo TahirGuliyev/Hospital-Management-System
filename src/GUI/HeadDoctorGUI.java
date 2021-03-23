@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -12,11 +13,15 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
+import Model.Clinic;
 import Model.HeadDoctor;
 
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+
 import java.awt.Font;
+import java.awt.Point;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
@@ -25,18 +30,28 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 
 import Util.*;
 
 public class HeadDoctorGUI extends JFrame {
-	
-	static HeadDoctor headDoctor = new HeadDoctor(); 
+
+	Clinic clinic = new Clinic();
+
+	static HeadDoctor headDoctor = new HeadDoctor();
 
 	private JPanel wPane;
 	private JTable tableDoctors;
 	private DefaultTableModel doctorModel = null;
 	private Object[] doctorData = null;
+	private JTable tableClinics;
+	private DefaultTableModel clinicModel = null;
+	private Object[] clinicData = null;
+	private JPopupMenu clinicMenu;
 
 	/**
 	 * Launch the application.
@@ -60,6 +75,7 @@ public class HeadDoctorGUI extends JFrame {
 	 * @throws SQLException 
 	 */
 	public HeadDoctorGUI(HeadDoctor headDoctor) throws SQLException {
+		//Doctor Model
 		doctorModel = new DefaultTableModel();
 		Object[] colDoctorName = new Object[4];
 		colDoctorName[0] = "ID";
@@ -76,6 +92,20 @@ public class HeadDoctorGUI extends JFrame {
 			doctorData[3] = headDoctor.getDoctorList().get(i).getPassword();
 			doctorModel.addRow(doctorData);
 		}
+		//Clinic Model
+		clinicModel = new DefaultTableModel();
+		Object[] colClinicName = new Object[2];
+		colClinicName[0] = "ID";
+		colClinicName[1] = "Kliniki Şöbə";
+		clinicModel.setColumnIdentifiers(colClinicName);
+		clinicData = new Object[2];
+		for (int i = 0; i < clinic.getClinicList().size(); i++) {
+			clinicData[0] = clinic.getClinicList().get(i).getId();
+			clinicData[1] = clinic.getClinicList().get(i).getName();
+			clinicModel.addRow(clinicData);
+		}
+		
+		
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 550);
@@ -104,7 +134,7 @@ public class HeadDoctorGUI extends JFrame {
 		
 		JPanel wDoctorManage = new JPanel();
 		wDoctorManage.setBackground(new Color(224, 255, 255));
-		wTabPane.addTab("Həkimləri İdarə Et", null, wDoctorManage, null);
+		wTabPane.addTab("Həkimlər", null, wDoctorManage, null);
 		wDoctorManage.setLayout(null);
 		
 		JLabel lblDoctorManageName = new JLabel("Ad Soyad");
@@ -197,13 +227,122 @@ public class HeadDoctorGUI extends JFrame {
 		btnDoctorManageDelete.setBounds(455, 323, 175, 34);
 		wDoctorManage.add(btnDoctorManageDelete);
 		
-		JScrollPane wScrollPane = new JScrollPane();
-		wScrollPane.setBounds(10, 11, 434, 346);
-		wDoctorManage.add(wScrollPane);
+		JScrollPane wScrollDoctor = new JScrollPane();
+		wScrollDoctor.setBounds(10, 11, 434, 346);
+		wDoctorManage.add(wScrollDoctor);
 		
 		tableDoctors = new JTable(doctorModel);
 		tableDoctors.setBackground(new Color(224, 255, 255));
-		wScrollPane.setViewportView(tableDoctors);
+		wScrollDoctor.setViewportView(tableDoctors);
+		
+		JPanel wClinicManage = new JPanel();
+		wClinicManage.setBackground(new Color(224, 255, 255));
+		wTabPane.addTab("Kliniki Şöbələr", null, wClinicManage, null);
+		wClinicManage.setLayout(null);
+		
+		JScrollPane wScrollClinic = new JScrollPane();
+		wScrollClinic.setBounds(10, 11, 235, 349);
+		wClinicManage.add(wScrollClinic);
+		
+		clinicMenu = new JPopupMenu();
+		JMenuItem updateMenu = new JMenuItem("Düzəliş Et");
+		JMenuItem deleteMenu = new JMenuItem("Sil");
+		clinicMenu.add(updateMenu);
+		clinicMenu.add(deleteMenu);
+		
+		updateMenu.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int selectedClinicID = Integer.parseInt(tableClinics.getValueAt(tableClinics.getSelectedRow(), 0).toString());
+				Clinic selectedClinic = clinic.getFetch(selectedClinicID);
+				UpdateClinicGUI updateClinicGUI = new UpdateClinicGUI(selectedClinic);
+				updateClinicGUI.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				updateClinicGUI.setVisible(true);
+				updateClinicGUI.addWindowListener(new WindowAdapter() {
+					@Override
+					public void windowClosed(WindowEvent e) {
+						try {
+							updateClinicModel();
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+					}
+				});
+			}
+			
+		});
+		
+		deleteMenu.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(Util.Helper.confirm("sure")) {
+					int selectedClinicID = Integer.parseInt(tableClinics.getValueAt(tableClinics.getSelectedRow(), 0).toString());
+					if(clinic.deleteClinic(selectedClinicID)) {
+						Util.Helper.showMsg("success");
+						try {
+							updateClinicModel();
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+					} else {
+						Util.Helper.showMsg("error");
+					}
+				};
+				
+			}
+			
+		});
+		
+		tableClinics = new JTable(clinicModel);
+		tableClinics.setComponentPopupMenu(clinicMenu);
+		tableClinics.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				Point point = e.getPoint();
+				int selectedRow = tableClinics.rowAtPoint(point);
+				tableClinics.setRowSelectionInterval(selectedRow, selectedRow);
+			}
+		});
+		tableClinics.setBackground(new Color(224, 255, 255));
+		wScrollClinic.setViewportView(tableClinics);
+		
+		JTextArea txtClinicManageName = new JTextArea();
+		txtClinicManageName.setBounds(261, 37, 129, 23);
+		wClinicManage.add(txtClinicManageName);
+		
+		JLabel lblClinicManageName = new JLabel("Kliniki Şöbənin Adı");
+		lblClinicManageName.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblClinicManageName.setBounds(261, 6, 129, 23);
+		wClinicManage.add(lblClinicManageName);
+		
+		JButton btnClinicManageAdd = new JButton("ƏLAVƏ ET");
+		btnClinicManageAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(txtClinicManageName.getText().length() == 0) {
+					Util.Helper.showMsg("fill");
+				} else {
+					if(clinic.addClinic(txtClinicManageName.getText())) {
+						Util.Helper.showMsg("success");
+						txtClinicManageName.setText(null);
+						try {
+							updateClinicModel();
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+			}
+		});
+		btnClinicManageAdd.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnClinicManageAdd.setBackground(new Color(50, 205, 50));
+		btnClinicManageAdd.setBounds(261, 71, 129, 34);
+		wClinicManage.add(btnClinicManageAdd);
+		
+		JScrollPane wScrollClinic_1 = new JScrollPane();
+		wScrollClinic_1.setBounds(411, 11, 235, 349);
+		wClinicManage.add(wScrollClinic_1);
 		tableDoctors.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
 			@Override
@@ -230,6 +369,7 @@ public class HeadDoctorGUI extends JFrame {
 				}
 			}});
 	}
+
 	public void updateDoctorModel() throws SQLException {
 		DefaultTableModel clearModel = (DefaultTableModel) tableDoctors.getModel();
 		clearModel.setRowCount(0);
@@ -241,6 +381,15 @@ public class HeadDoctorGUI extends JFrame {
 			doctorModel.addRow(doctorData);
 		}
 	}
-	
-	
+
+	public void updateClinicModel() throws SQLException {
+		DefaultTableModel clearModel = (DefaultTableModel) tableClinics.getModel();
+		clearModel.setRowCount(0);
+		for (int i = 0; i < clinic.getClinicList().size(); i++) {
+			clinicData[0] = clinic.getClinicList().get(i).getId();
+			clinicData[1] = clinic.getClinicList().get(i).getName();
+			clinicModel.addRow(clinicData);
+		}
+	}
+
 }
