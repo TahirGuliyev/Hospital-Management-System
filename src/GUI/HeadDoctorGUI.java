@@ -37,6 +37,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 
 import Util.*;
+import javax.swing.JComboBox;
 
 public class HeadDoctorGUI extends JFrame {
 
@@ -52,6 +53,7 @@ public class HeadDoctorGUI extends JFrame {
 	private DefaultTableModel clinicModel = null;
 	private Object[] clinicData = null;
 	private JPopupMenu clinicMenu;
+	private JTable tableWorker;
 
 	/**
 	 * Launch the application.
@@ -71,11 +73,12 @@ public class HeadDoctorGUI extends JFrame {
 
 	/**
 	 * Create the frame.
-	 * @param headDoctor 
-	 * @throws SQLException 
+	 * 
+	 * @param headDoctor
+	 * @throws SQLException
 	 */
 	public HeadDoctorGUI(HeadDoctor headDoctor) throws SQLException {
-		//Doctor Model
+		// Doctor Model
 		doctorModel = new DefaultTableModel();
 		Object[] colDoctorName = new Object[4];
 		colDoctorName[0] = "ID";
@@ -92,7 +95,7 @@ public class HeadDoctorGUI extends JFrame {
 			doctorData[3] = headDoctor.getDoctorList().get(i).getPassword();
 			doctorModel.addRow(doctorData);
 		}
-		//Clinic Model
+		// Clinic Model
 		clinicModel = new DefaultTableModel();
 		Object[] colClinicName = new Object[2];
 		colClinicName[0] = "ID";
@@ -104,8 +107,14 @@ public class HeadDoctorGUI extends JFrame {
 			clinicData[1] = clinic.getClinicList().get(i).getName();
 			clinicModel.addRow(clinicData);
 		}
-		
-		
+
+		// Worker Model
+		DefaultTableModel workerModel = new DefaultTableModel();
+		Object[] colWorker = new Object[2];
+		colWorker[0] = "ID";
+		colWorker[1] = "Ad Soyad";
+		workerModel.setColumnIdentifiers(colWorker);
+		Object[] workerData = new Object[2];
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 550);
@@ -114,64 +123,66 @@ public class HeadDoctorGUI extends JFrame {
 		wPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(wPane);
 		wPane.setLayout(null);
-		
+
 		JLabel lblWelcomeDoctor = new JLabel("Xoş gəlmisiniz, hörmətli " + headDoctor.getName());
 		lblWelcomeDoctor.setBounds(22, 16, 490, 39);
 		lblWelcomeDoctor.setFont(new Font("Tahoma", Font.BOLD, 14));
 		wPane.add(lblWelcomeDoctor);
-		
+
 		JButton btnDoctorExit = new JButton("\u00C7IXI\u015E");
 		btnDoctorExit.setBounds(578, 21, 88, 29);
 		btnDoctorExit.setForeground(new Color(255, 255, 255));
 		btnDoctorExit.setFont(new Font("Tahoma", Font.BOLD, 16));
 		btnDoctorExit.setBackground(new Color(220, 20, 60));
 		wPane.add(btnDoctorExit);
-		
+
 		JTabbedPane wTabPane = new JTabbedPane(JTabbedPane.TOP);
 		wTabPane.setBackground(new Color(224, 255, 255));
 		wTabPane.setBounds(10, 97, 661, 399);
 		wPane.add(wTabPane);
-		
+
 		JPanel wDoctorManage = new JPanel();
 		wDoctorManage.setBackground(new Color(224, 255, 255));
 		wTabPane.addTab("Həkimlər", null, wDoctorManage, null);
 		wDoctorManage.setLayout(null);
-		
+
 		JLabel lblDoctorManageName = new JLabel("Ad Soyad");
 		lblDoctorManageName.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblDoctorManageName.setBounds(455, 23, 106, 23);
 		wDoctorManage.add(lblDoctorManageName);
-		
+
 		JTextArea txtDoctorManageName = new JTextArea();
 		txtDoctorManageName.setBounds(455, 48, 175, 23);
 		wDoctorManage.add(txtDoctorManageName);
-		
+
 		JTextArea txtDoctorManageFinKod = new JTextArea();
 		txtDoctorManageFinKod.setBounds(455, 107, 175, 23);
 		wDoctorManage.add(txtDoctorManageFinKod);
-		
+
 		JLabel lblDoctorManageFinKod = new JLabel("FİN Kod");
 		lblDoctorManageFinKod.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblDoctorManageFinKod.setBounds(455, 82, 106, 23);
 		wDoctorManage.add(lblDoctorManageFinKod);
-		
+
 		JTextArea txtDoctorManagePassword = new JTextArea();
 		txtDoctorManagePassword.setBounds(455, 166, 175, 23);
 		wDoctorManage.add(txtDoctorManagePassword);
-		
+
 		JLabel lblDoctorManagePassword = new JLabel("Şifrə");
 		lblDoctorManagePassword.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblDoctorManagePassword.setBounds(455, 141, 106, 23);
 		wDoctorManage.add(lblDoctorManagePassword);
-		
+
 		JButton btnDoctorManageAdd = new JButton("ƏLAVƏ ET");
 		btnDoctorManageAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(txtDoctorManageName.getText().length() == 0 || txtDoctorManagePassword.getText().length() == 0 || txtDoctorManageFinKod.getText().length() == 0) {
-				Util.Helper.showMsg("fill");	
-				}else {
-					boolean control = headDoctor.addDoctor(txtDoctorManageFinKod.getText(), txtDoctorManagePassword.getText(), txtDoctorManageName.getText());
-					if(control) {
+				if (txtDoctorManageName.getText().length() == 0 || txtDoctorManagePassword.getText().length() == 0
+						|| txtDoctorManageFinKod.getText().length() == 0) {
+					Util.Helper.showMsg("fill");
+				} else {
+					boolean control = headDoctor.addDoctor(txtDoctorManageFinKod.getText(),
+							txtDoctorManagePassword.getText(), txtDoctorManageName.getText());
+					if (control) {
 						Util.Helper.showMsg("success");
 						txtDoctorManageFinKod.setText(null);
 						txtDoctorManagePassword.setText(null);
@@ -189,34 +200,34 @@ public class HeadDoctorGUI extends JFrame {
 		btnDoctorManageAdd.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnDoctorManageAdd.setBounds(455, 201, 175, 34);
 		wDoctorManage.add(btnDoctorManageAdd);
-		
+
 		JLabel lblDoctorManageUserID = new JLabel("İstifadəçi ID");
 		lblDoctorManageUserID.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblDoctorManageUserID.setBounds(455, 264, 106, 23);
 		wDoctorManage.add(lblDoctorManageUserID);
-		
+
 		JTextArea txtDoctorManageUserID = new JTextArea();
 		txtDoctorManageUserID.setBounds(455, 289, 175, 23);
 		wDoctorManage.add(txtDoctorManageUserID);
-		
+
 		JButton btnDoctorManageDelete = new JButton("SİL");
 		btnDoctorManageDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(txtDoctorManageUserID.getText().length() == 0) {
+				if (txtDoctorManageUserID.getText().length() == 0) {
 					Util.Helper.showMsg("Zəhmət olmasa bir həkim seçin!");
 				} else {
-					if(Helper.confirm("sure")) {
+					if (Helper.confirm("sure")) {
 						int selectID = Integer.parseInt(txtDoctorManageUserID.getText());
-							try {
-								boolean control = headDoctor.deleteDoctor(selectID);
-								if(control) {
-									Helper.showMsg("success");
-									txtDoctorManageUserID.setText(null);
+						try {
+							boolean control = headDoctor.deleteDoctor(selectID);
+							if (control) {
+								Helper.showMsg("success");
+								txtDoctorManageUserID.setText(null);
 								updateDoctorModel();
-								}
-							} catch (SQLException e1) {
-								e1.printStackTrace();
 							}
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
 					}
 				}
 			}
@@ -226,35 +237,36 @@ public class HeadDoctorGUI extends JFrame {
 		btnDoctorManageDelete.setBackground(new Color(220, 20, 60));
 		btnDoctorManageDelete.setBounds(455, 323, 175, 34);
 		wDoctorManage.add(btnDoctorManageDelete);
-		
+
 		JScrollPane wScrollDoctor = new JScrollPane();
 		wScrollDoctor.setBounds(10, 11, 434, 346);
 		wDoctorManage.add(wScrollDoctor);
-		
+
 		tableDoctors = new JTable(doctorModel);
 		tableDoctors.setBackground(new Color(224, 255, 255));
 		wScrollDoctor.setViewportView(tableDoctors);
-		
+
 		JPanel wClinicManage = new JPanel();
 		wClinicManage.setBackground(new Color(224, 255, 255));
 		wTabPane.addTab("Kliniki Şöbələr", null, wClinicManage, null);
 		wClinicManage.setLayout(null);
-		
+
 		JScrollPane wScrollClinic = new JScrollPane();
-		wScrollClinic.setBounds(10, 11, 235, 349);
+		wScrollClinic.setBounds(10, 36, 235, 324);
 		wClinicManage.add(wScrollClinic);
-		
+
 		clinicMenu = new JPopupMenu();
 		JMenuItem updateMenu = new JMenuItem("Düzəliş Et");
 		JMenuItem deleteMenu = new JMenuItem("Sil");
 		clinicMenu.add(updateMenu);
 		clinicMenu.add(deleteMenu);
-		
+
 		updateMenu.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int selectedClinicID = Integer.parseInt(tableClinics.getValueAt(tableClinics.getSelectedRow(), 0).toString());
+				int selectedClinicID = Integer
+						.parseInt(tableClinics.getValueAt(tableClinics.getSelectedRow(), 0).toString());
 				Clinic selectedClinic = clinic.getFetch(selectedClinicID);
 				UpdateClinicGUI updateClinicGUI = new UpdateClinicGUI(selectedClinic);
 				updateClinicGUI.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -270,16 +282,17 @@ public class HeadDoctorGUI extends JFrame {
 					}
 				});
 			}
-			
+
 		});
-		
+
 		deleteMenu.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(Util.Helper.confirm("sure")) {
-					int selectedClinicID = Integer.parseInt(tableClinics.getValueAt(tableClinics.getSelectedRow(), 0).toString());
-					if(clinic.deleteClinic(selectedClinicID)) {
+				if (Util.Helper.confirm("sure")) {
+					int selectedClinicID = Integer
+							.parseInt(tableClinics.getValueAt(tableClinics.getSelectedRow(), 0).toString());
+					if (clinic.deleteClinic(selectedClinicID)) {
 						Util.Helper.showMsg("success");
 						try {
 							updateClinicModel();
@@ -289,12 +302,13 @@ public class HeadDoctorGUI extends JFrame {
 					} else {
 						Util.Helper.showMsg("error");
 					}
-				};
-				
+				}
+				;
+
 			}
-			
+
 		});
-		
+
 		tableClinics = new JTable(clinicModel);
 		tableClinics.setComponentPopupMenu(clinicMenu);
 		tableClinics.addMouseListener(new MouseAdapter() {
@@ -307,23 +321,23 @@ public class HeadDoctorGUI extends JFrame {
 		});
 		tableClinics.setBackground(new Color(224, 255, 255));
 		wScrollClinic.setViewportView(tableClinics);
-		
+
 		JTextArea txtClinicManageName = new JTextArea();
 		txtClinicManageName.setBounds(261, 37, 129, 23);
 		wClinicManage.add(txtClinicManageName);
-		
+
 		JLabel lblClinicManageName = new JLabel("Kliniki Şöbənin Adı");
 		lblClinicManageName.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblClinicManageName.setBounds(261, 6, 129, 23);
 		wClinicManage.add(lblClinicManageName);
-		
+
 		JButton btnClinicManageAdd = new JButton("ƏLAVƏ ET");
 		btnClinicManageAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(txtClinicManageName.getText().length() == 0) {
+				if (txtClinicManageName.getText().length() == 0) {
 					Util.Helper.showMsg("fill");
 				} else {
-					if(clinic.addClinic(txtClinicManageName.getText())) {
+					if (clinic.addClinic(txtClinicManageName.getText())) {
 						Util.Helper.showMsg("success");
 						txtClinicManageName.setText(null);
 						try {
@@ -339,35 +353,136 @@ public class HeadDoctorGUI extends JFrame {
 		btnClinicManageAdd.setBackground(new Color(50, 205, 50));
 		btnClinicManageAdd.setBounds(261, 71, 129, 34);
 		wClinicManage.add(btnClinicManageAdd);
+
+		JScrollPane wScrollWorker = new JScrollPane();
+		wScrollWorker.setBounds(411, 36, 235, 324);
+		wClinicManage.add(wScrollWorker);
+
+		tableWorker = new JTable();
+		wScrollWorker.setViewportView(tableWorker);
+
+		JComboBox selectDoctorClinicManage = new JComboBox();
+		selectDoctorClinicManage.setBounds(261, 256, 129, 34);
+		for (int i = 0; i < headDoctor.getDoctorList().size(); i++) {
+			selectDoctorClinicManage.addItem(
+					new Item(headDoctor.getDoctorList().get(i).getId(), headDoctor.getDoctorList().get(i).getName()));
+		}
+		selectDoctorClinicManage.addActionListener(e -> {
+			JComboBox c = (JComboBox) e.getSource();
+			Item item = (Item) c.getSelectedItem();
+		});
+		wClinicManage.add(selectDoctorClinicManage);
+
+		JButton btnClinicManageAddWorker = new JButton("ƏLAVƏ ET");
+		btnClinicManageAddWorker.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int selRow = tableClinics.getSelectedRow();
+				if (selRow >= 0) {
+					String selClinic = tableClinics.getModel().getValueAt(selRow, 0).toString();
+					int selClinicID = Integer.parseInt(selClinic);
+					Item doctorItem = (Item) selectDoctorClinicManage.getSelectedItem();
+					boolean control = headDoctor.addWorker(doctorItem.getKey(), selClinicID);
+					if (control) {
+						Util.Helper.showMsg("success");
+						DefaultTableModel clearModel = (DefaultTableModel) tableWorker.getModel();
+						clearModel.setRowCount(0);
+							try {
+								for (int i = 0; i < headDoctor.getClinicDoctorList(selClinicID).size(); i++) {
+								workerData[0] = headDoctor.getClinicDoctorList(selClinicID).get(i).getId();
+								workerData[1] = headDoctor.getClinicDoctorList(selClinicID).get(i).getName();
+								workerModel.addRow(workerData);
+								
+
+}
+							} catch (SQLException e1) {
+								e1.printStackTrace();
+							} 
+						tableWorker.setModel(workerModel);
+					} else {
+						Util.Helper.showMsg("error");
+					}
+				} else {
+					Util.Helper.showMsg("Zəhmət olmasa bir kliniki şöbə seçin!");
+				}
+			}
+		});
+		btnClinicManageAddWorker.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnClinicManageAddWorker.setBackground(new Color(50, 205, 50));
+		btnClinicManageAddWorker.setBounds(261, 312, 129, 34);
+		wClinicManage.add(btnClinicManageAddWorker);
+
+		JLabel lblKlinikibniSe = new JLabel("Kliniki Şöbəni Seç");
+		lblKlinikibniSe.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblKlinikibniSe.setBounds(261, 146, 129, 23);
+		wClinicManage.add(lblKlinikibniSe);
+
+		JButton btnClinicSelect = new JButton("SEÇ");
+		btnClinicSelect.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int selRow = tableClinics.getSelectedRow();
+				if (selRow >= 0) {
+					String selClinic = tableClinics.getModel().getValueAt(selRow, 0).toString();
+					int selClinicID = Integer.parseInt(selClinic);
+					DefaultTableModel clearModel = (DefaultTableModel) tableWorker.getModel();
+					clearModel.setRowCount(0);
+					try {
+						for (int i = 0; i < headDoctor.getClinicDoctorList(selClinicID).size(); i++) {
+						workerData[0] = headDoctor.getClinicDoctorList(selClinicID).get(i).getId();
+						workerData[1] = headDoctor.getClinicDoctorList(selClinicID).get(i).getName();
+						workerModel.addRow(workerData);
+						}
+
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+					tableWorker.setModel(workerModel);
+				} else {
+					Util.Helper.showMsg("Zəhmət olmasa bir kliniki şöbə seçin!");
+				}
+			}
+		});
+		btnClinicSelect.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnClinicSelect.setBackground(new Color(30, 144, 255));
+		btnClinicSelect.setBounds(261, 180, 129, 34);
+		wClinicManage.add(btnClinicSelect);
 		
-		JScrollPane wScrollClinic_1 = new JScrollPane();
-		wScrollClinic_1.setBounds(411, 11, 235, 349);
-		wClinicManage.add(wScrollClinic_1);
+		JLabel lblKlinikiblr = new JLabel("Kliniki Şöbələr");
+		lblKlinikiblr.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblKlinikiblr.setBounds(81, 6, 105, 23);
+		wClinicManage.add(lblKlinikiblr);
+		
+		JLabel lblClinicManageName_1_1 = new JLabel("Həkimlər");
+		lblClinicManageName_1_1.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblClinicManageName_1_1.setBounds(501, 6, 67, 23);
+		wClinicManage.add(lblClinicManageName_1_1);
 		tableDoctors.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				try{
-					
-					txtDoctorManageUserID.setText(tableDoctors.getValueAt(tableDoctors.getSelectedRow(),0).toString());
+				try {
+
+					txtDoctorManageUserID.setText(tableDoctors.getValueAt(tableDoctors.getSelectedRow(), 0).toString());
+				} catch (Exception ex) {
 				}
-				catch(Exception ex) {}
-			}});
+			}
+		});
 		tableDoctors.getModel().addTableModelListener(new TableModelListener() {
 
 			@Override
 			public void tableChanged(TableModelEvent e) {
-				if(e.getType() == TableModelEvent.UPDATE) {
-					int selectID = Integer.parseInt(tableDoctors.getValueAt(tableDoctors.getSelectedRow(), 0).toString());
+				if (e.getType() == TableModelEvent.UPDATE) {
+					int selectID = Integer
+							.parseInt(tableDoctors.getValueAt(tableDoctors.getSelectedRow(), 0).toString());
 					String selectName = tableDoctors.getValueAt(tableDoctors.getSelectedRow(), 1).toString();
 					String selectFinKod = tableDoctors.getValueAt(tableDoctors.getSelectedRow(), 2).toString();
 					String selectPassword = tableDoctors.getValueAt(tableDoctors.getSelectedRow(), 3).toString();
 					boolean control = headDoctor.updateDoctor(selectID, selectFinKod, selectPassword, selectName);
-					if(control) {
-						//Util.Helper.showMsg("success");
+					if (control) {
+						// Util.Helper.showMsg("success");
 					}
 				}
-			}});
+			}
+		});
 	}
 
 	public void updateDoctorModel() throws SQLException {
@@ -391,5 +506,4 @@ public class HeadDoctorGUI extends JFrame {
 			clinicModel.addRow(clinicData);
 		}
 	}
-
 }
