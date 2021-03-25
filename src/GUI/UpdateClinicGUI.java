@@ -2,13 +2,10 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
 import Model.Clinic;
-
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextArea;
@@ -25,9 +22,6 @@ public class UpdateClinicGUI extends JFrame {
 	private JPanel wUpdateClinic;
 	private JTextField txtClinicManageNameUpdate;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -41,9 +35,6 @@ public class UpdateClinicGUI extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public UpdateClinicGUI(Clinic clinic) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 300, 175);

@@ -42,7 +42,7 @@ public class LoginGUI extends JFrame {
 	 */
 	public LoginGUI() {
 		setResizable(false);
-		setTitle("X\u0259st\u0259xana \u0130dar\u0259etm\u0259 Sistemi");
+		setTitle("Xəstəxana İdarəetmə Sistemi");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 500);
 		wPane = new JPanel();
@@ -55,7 +55,7 @@ public class LoginGUI extends JFrame {
 		lblLogo.setBounds(284, 0, 66, 59);
 		wPane.add(lblLogo);
 		
-		JLabel lblWelcomeMessageFirst = new JLabel("X\u018FST\u018FXANA \u0130DAR\u018FETM\u018F S\u0130STEM\u0130N\u018F XO\u015E G\u018FLM\u0130S\u0130N\u0130Z!");
+		JLabel lblWelcomeMessageFirst = new JLabel("XƏSTƏXANA İDARƏETMƏ SİSTEMİNƏ XOŞ GƏLMİSİNİZ!");
 		lblWelcomeMessageFirst.setBounds(98, 58, 439, 24);
 		lblWelcomeMessageFirst.setFont(new Font("Ebrima", Font.BOLD, 16));
 		wPane.add(lblWelcomeMessageFirst);
@@ -74,7 +74,7 @@ public class LoginGUI extends JFrame {
 		lblPacientFinKod.setBounds(62, 47, 161, 61);
 		wPacientLogin.add(lblPacientFinKod);
 		
-		JLabel lblPacientPassword = new JLabel("\u015Eifr\u0259 :");
+		JLabel lblPacientPassword = new JLabel("Şifrə :");
 		lblPacientPassword.setFont(new Font("Ebrima", Font.BOLD, 24));
 		lblPacientPassword.setBounds(62, 105, 161, 61);
 		wPacientLogin.add(lblPacientPassword);
@@ -93,7 +93,7 @@ public class LoginGUI extends JFrame {
 		txtPacientPassword.setBounds(272, 115, 237, 41);
 		wPacientLogin.add(txtPacientPassword);
 		
-		JButton btnPacientRegister = new JButton("QEYD\u0130YYAT");
+		JButton btnPacientRegister = new JButton("QEYDİYYAT");
 		btnPacientRegister.setFont(new Font("Verdana", Font.BOLD, 17));
 		btnPacientRegister.setBackground(Color.CYAN);
 		btnPacientRegister.setBounds(62, 198, 183, 61);
@@ -123,13 +123,13 @@ public class LoginGUI extends JFrame {
 		wDoctorLogin.add(txtDoctorFinKod);
 		
 		txtDoctorPassword = new JTextField();
-		txtDoctorPassword.setText("\u015Eifr\u0259niz...");
+		txtDoctorPassword.setText("Şifrəniz...");
 		txtDoctorPassword.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		txtDoctorPassword.setColumns(10);
 		txtDoctorPassword.setBounds(263, 109, 237, 41);
 		wDoctorLogin.add(txtDoctorPassword);
 		
-		JLabel lblDoctorPassword = new JLabel("\u015Eifr\u0259 :");
+		JLabel lblDoctorPassword = new JLabel("Şifr\u0259 :");
 		lblDoctorPassword.setFont(new Font("Ebrima", Font.BOLD, 24));
 		lblDoctorPassword.setBounds(53, 99, 161, 61);
 		wDoctorLogin.add(lblDoctorPassword);

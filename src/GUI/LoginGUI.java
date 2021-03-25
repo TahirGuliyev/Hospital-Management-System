@@ -2,18 +2,14 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
 import Model.HeadDoctor;
 import Util.DBConnection;
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JTabbedPane;
@@ -36,9 +32,6 @@ public class LoginGUI extends JFrame {
 	private JPasswordField txtPacientPassword;
 	private DBConnection conn = new DBConnection();
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -52,9 +45,6 @@ public class LoginGUI extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public LoginGUI() {
 		setResizable(false);
 		setTitle("X\u0259st\u0259xana \u0130dar\u0259etm\u0259 Sistemi");

@@ -6,9 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
 import Util.DBConnection;
-
 public class Clinic {
 private int id;
 DBConnection conn = new DBConnection();

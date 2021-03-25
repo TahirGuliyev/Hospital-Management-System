@@ -2,7 +2,6 @@ package GUI;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -12,18 +11,14 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-
 import Model.Clinic;
 import Model.HeadDoctor;
-
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-
 import java.awt.Font;
 import java.awt.Point;
 import java.sql.SQLException;
-
 import javax.swing.JButton;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -55,9 +50,6 @@ public class HeadDoctorGUI extends JFrame {
 	private JPopupMenu clinicMenu;
 	private JTable tableWorker;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -71,12 +63,6 @@ public class HeadDoctorGUI extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 * 
-	 * @param headDoctor
-	 * @throws SQLException
-	 */
 	public HeadDoctorGUI(HeadDoctor headDoctor) throws SQLException {
 		// Doctor Model
 		doctorModel = new DefaultTableModel();
